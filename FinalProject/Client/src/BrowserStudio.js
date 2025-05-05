@@ -15,6 +15,7 @@ const EFFECTS =
     reverb: 
     {
         name: "Reverb",
+        description: "Makes your sound feel like it's in a room or hall by adding natural echo.",
         create: () => new Tone.Reverb(2.5).toDestination(),
         defaultSetting: {decay: 2.5, wet: 0.5},
         controls: 
@@ -26,6 +27,7 @@ const EFFECTS =
     delay: 
     {
         name: "Delay",
+        description: "Repeats your sound like an echo, creating a bouncing effect.",
         create: () => new Tone.FeedbackDelay("8n", 0.5).toDestination(),
         defaultSettings: {delayTime: 0.25, feedback: 0.5, wet: 0.5},
         controls: 
@@ -38,6 +40,7 @@ const EFFECTS =
     distortion: 
     {
         name: "Distortion",
+        description: "Adds grit and crunch to your sound, like an overdriven guitar.",
         create: () => new Tone.Distortion(0.4).toDestination(),
         defaultSettings: {distortion: 0.4, wet: 0.5},
         controls: 
@@ -49,6 +52,7 @@ const EFFECTS =
     filter:
     {
         name: "Filter",
+        description: "Lets you remove high or low parts of the sound to shape the tone.",
         create: () => new Tone.Filter(800, "lowpass").toDestination(),
         defaultSettings: {frequency: 800, type: "lowpass", Q:1},
         controls:
@@ -60,6 +64,7 @@ const EFFECTS =
     pitch:
     {
         name: "Pitch",
+        description: "Changes how high or low the sound is, without speeding it up or slowing it down.",
         create: () => new Tone.PitchShift(0).toDestination(),
         defaultSettings: {pitch: 0, type: "pitch"},
         controls:
@@ -263,6 +268,7 @@ function EffectControls({ cellEffects, setCellEffects, selectedCell, effectSetti
           {currentEffects.map(effectType => (
             <div key={effectType} style={{ marginBottom: "16px", padding: "12px", border: "1px solid #ddd", borderRadius: "4px" }}>
               <h5 style={{ margin: "0 0 8px 0" }}>{EFFECTS[effectType].name}</h5>
+              <p>{EFFECTS[effectType].description}</p>
               {EFFECTS[effectType].controls.map(control => (
                 <div key={control.param} style={{ marginBottom: "8px" }}>
                   <label style={{ display: "block", marginBottom: "4px" }}>

@@ -19,6 +19,8 @@ const Dashboard = () => {
       <div className="welcome-box">
         <h3>Welcome, {currentUser?.username || 'User'}!</h3>
         <p>You are now logged in to your account.</p>
+        <p>Browser Studio is easy to use, just navigate to the studio and then just drag and drop sounds!</p>
+        <p>Try out the effects!</p>
       </div>
       
       <div className="user-info">
