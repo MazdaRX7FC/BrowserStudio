@@ -499,29 +499,15 @@ function Timeline({ grid, setGrid, playhead, selectedCell, setSelectedCell, cell
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
         <h3 style={{ margin: 0 }}>Timeline</h3>
         <div>
-          <button 
+          <button id="undo"
             onClick={onUndo}
-            style={{ 
-              marginRight: 10, 
-              padding: "5px 10px", 
-              backgroundColor: "#f0f0f0", 
-              border: "1px solid #ccc", 
-              borderRadius: 4, 
-              cursor: "pointer" 
-            }}
+            
           >
             Undo Last Drop
           </button>
-          <button 
+          <button id = "clear"
             onClick={onClear}
-            style={{ 
-              padding: "5px 10px", 
-              backgroundColor: "#ff9800", 
-              color: "white", 
-              border: "none", 
-              borderRadius: 4, 
-              cursor: "pointer" 
-            }}
+            
           >
             Clear Timeline
           </button>
@@ -663,7 +649,7 @@ function Player({ grid, setPlayhead, playhead, cellEffects, effectSettings }) {
       
       <div style={{ marginTop: 15 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ width: 60 }}>BPM: {bpm}</span>
+          <span style={{ width: 60, color: "white" }}>BPM: {bpm}</span>
           <input
             type="range"
             min="60"
@@ -677,7 +663,7 @@ function Player({ grid, setPlayhead, playhead, cellEffects, effectSettings }) {
         </div>
       </div>
       
-      {playhead >= 0 && <span style={{ marginLeft: 20 }}>Beat: {playhead + 1}</span>}
+      {playhead >= 0 && <span style={{ marginLeft: 20, color: "white" }}>Beat: {playhead + 1}</span>}
     </div>
   );
 }
@@ -696,6 +682,8 @@ export default function BrowserStudio() {
   
   // History state for undo functionality
   const [history, setHistory] = useState([]);
+
+  
 
     // Track grid changes to maintain undo history
   useEffect(() => {
@@ -786,10 +774,17 @@ export default function BrowserStudio() {
   };
 
   const saveProject = () => {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if (!user || !user.username) {
+    alert("You must be logged in to save projects.");
+    return;
+  }
+
   const name = prompt("Enter a name for your project:");
   if (!name) return;
 
-  const existing = JSON.parse(localStorage.getItem("projects") || "{}");
+  const key = `projects_${user.username}`;
+  const existing = JSON.parse(localStorage.getItem(key) || "{}");
 
   existing[name] = {
     grid,
@@ -799,53 +794,53 @@ export default function BrowserStudio() {
     timestamp: Date.now()
   };
 
-  localStorage.setItem("projects", JSON.stringify(existing));
+  localStorage.setItem(key, JSON.stringify(existing));
   alert("Project saved!");
 };
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div style={{ padding: 20, fontFamily: "Arial, sans-serif" }}>
-        <h2>Browser Studio</h2>
-        
-        <div style={{ display: "flex", gap: 40 }}>
-          <div style={{ width: 220 }}>
-            <h3>Sound Library</h3>
-            <SoundList sounds={sounds} />
-          </div>
-          <div style={{ flex: 1 }}><button onClick={saveProject}> Save Project</button>
-            <Timeline 
-              grid={grid} 
-              setGrid={setGrid} 
-              playhead={playhead} 
-              selectedCell={selectedCell}
-              setSelectedCell={setSelectedCell}
-              cellEffects={cellEffects}
-              onUndo={handleUndo}
-              onClear={handleClearTimeline}
-            />
-            <Player 
-              grid={grid} 
-              setPlayhead={setPlayhead} 
-              playhead={playhead}
-              cellEffects={cellEffects}
-              effectSettings={effectSettings}
-            />
-            <div style={{ marginTop: 20 }}>
-              <EffectControls 
-                cellEffects={cellEffects}
-                setCellEffects={setCellEffects}
-                selectedCell={selectedCell}
-                effectSettings={effectSettings}
-                setEffectSettings={setEffectSettings}
-              />
-            </div>
-            <div style={{ marginBottom: 10 }}>
-  
-</div>
-          </div>
-        </div>
+      <div className="browser-studio">
+  <h2>Browser Studio</h2>
+  <div className="studio-body">
+    <div className="sound-library">
+      <h3>Sound Library</h3>
+      <SoundList sounds={sounds} />
+    </div>
+    <div className="studio-main">
+      
+      <div className="timeline-container">
+        <button id="save" onClick={saveProject}>Save Project</button>
+        <Timeline 
+          grid={grid} 
+          setGrid={setGrid} 
+          playhead={playhead} 
+          selectedCell={selectedCell}
+          setSelectedCell={setSelectedCell}
+          cellEffects={cellEffects}
+          onUndo={handleUndo}
+          onClear={handleClearTimeline}
+        />
+        <Player 
+          grid={grid} 
+          setPlayhead={setPlayhead} 
+          playhead={playhead}
+          cellEffects={cellEffects}
+          effectSettings={effectSettings}
+        />
       </div>
+      <div className="effect-controls">
+        <EffectControls 
+          cellEffects={cellEffects}
+          setCellEffects={setCellEffects}
+          selectedCell={selectedCell}
+          effectSettings={effectSettings}
+          setEffectSettings={setEffectSettings}
+        />
+      </div>
+    </div>
+  </div>
+</div>
     </DndProvider>
   );
 }

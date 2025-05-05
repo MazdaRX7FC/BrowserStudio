@@ -8,21 +8,37 @@ const ProjectManagement = () => {
 
   // Load projects from localStorage on mount
   useEffect(() => {
-    const storedProjects = JSON.parse(localStorage.getItem("projects") || "{}");
-    setProjects(storedProjects);
-  }, []);
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if (!user || !user.username) {
+    alert("Please log in first.");
+    navigate("/login");
+    return;
+  }
+
+  const key = `projects_${user.username}`;
+  const storedProjects = JSON.parse(localStorage.getItem(key) || "{}");
+  setProjects(storedProjects);
+}, []);
 
   const loadProject = (name) => {
-    localStorage.setItem("currentProject", JSON.stringify(projects[name]));
-    navigate("/browser-studio");
-  };
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const key = `projects_${user.username}`;
+  const projectData = projects[name];
 
-  const deleteProject = (name) => {
-    const updated = { ...projects };
-    delete updated[name];
-    localStorage.setItem("projects", JSON.stringify(updated));
-    setProjects(updated);
-  };
+  // Store project data along with its name
+  localStorage.setItem("currentProject", JSON.stringify({ ...projectData, name }));
+
+  navigate("/browserstudio");
+};
+
+const deleteProject = (name) => {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const key = `projects_${user.username}`;
+  const updated = { ...projects };
+  delete updated[name];
+  localStorage.setItem(key, JSON.stringify(updated));
+  setProjects(updated);
+};
 
   return (
     <div className="container">
@@ -32,8 +48,8 @@ const ProjectManagement = () => {
         {Object.keys(projects).map((name) => (
           <li key={name}>
             <strong>{name}</strong>
-            <button onClick={() => loadProject(name)}>Load</button>
-            <button onClick={() => deleteProject(name)}>Delete</button>
+            <button id="load" onClick={() => loadProject(name)}>Load</button>
+            <button id="delete" onClick={() => deleteProject(name)}>Delete</button>
           </li>
         ))}
       </ul>
