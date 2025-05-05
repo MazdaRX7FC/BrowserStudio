@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './styles.css';
 
 const Dashboard = () => {
-  const { currentUser, logout } = useContext(UserContext);
+  const {currentUser, logout} = useContext(UserContext);
   const navigate = useNavigate();
   
   const handleLogout = () => {

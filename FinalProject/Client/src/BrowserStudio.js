@@ -697,7 +697,7 @@ export default function BrowserStudio() {
   // History state for undo functionality
   const [history, setHistory] = useState([]);
 
-  // Update history when grid changes
+    // Track grid changes to maintain undo history
   useEffect(() => {
     // Save current state to history when grid changes
     // But avoid adding empty grids to history
@@ -706,6 +706,18 @@ export default function BrowserStudio() {
       setHistory(prev => [...prev, JSON.stringify(grid)]);
     }
   }, [grid]);
+
+  // Load project from localStorage once on initial mount
+  useEffect(() => {
+  const project = JSON.parse(localStorage.getItem("currentProject"));
+  if (project) {
+    setGrid(project.grid || []);
+    setCellEffects(project.cellEffects || []);
+    setEffectSettings(project.effectSettings || {});
+    setSelectedCell(project.selectedCell || null);
+    localStorage.removeItem("currentProject"); // optional cleanup
+  }
+}, []);
 
   // Undo last drop
   const handleUndo = () => {
@@ -773,16 +785,35 @@ export default function BrowserStudio() {
     ]
   };
 
+  const saveProject = () => {
+  const name = prompt("Enter a name for your project:");
+  if (!name) return;
+
+  const existing = JSON.parse(localStorage.getItem("projects") || "{}");
+
+  existing[name] = {
+    grid,
+    cellEffects,
+    effectSettings,
+    selectedCell,
+    timestamp: Date.now()
+  };
+
+  localStorage.setItem("projects", JSON.stringify(existing));
+  alert("Project saved!");
+};
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div style={{ padding: 20, fontFamily: "Arial, sans-serif" }}>
         <h2>Browser Studio</h2>
+        
         <div style={{ display: "flex", gap: 40 }}>
           <div style={{ width: 220 }}>
             <h3>Sound Library</h3>
             <SoundList sounds={sounds} />
           </div>
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1 }}><button onClick={saveProject}> Save Project</button>
             <Timeline 
               grid={grid} 
               setGrid={setGrid} 
@@ -809,6 +840,9 @@ export default function BrowserStudio() {
                 setEffectSettings={setEffectSettings}
               />
             </div>
+            <div style={{ marginBottom: 10 }}>
+  
+</div>
           </div>
         </div>
       </div>
