@@ -775,7 +775,16 @@ export default function BrowserStudio() {
     ],
     Piano: 
     [
-      
+      { id: 8, name: "Piano 1", url: "/sounds/piano1.wav" },
+      { id: 9, name: "Piano 2", url: "/sounds/piano2.wav" },
+      { id: 10, name: "Piano 3", url: "/sounds/piano3.wav" },
+      { id: 11, name: "Piano 4", url: "/sounds/piano4.wav" },
+      { id: 12, name: "Piano 5", url: "/sounds/piano5.wav" },
+      { id: 13, name: "Piano 6", url: "/sounds/piano6.wav" },
+      { id: 14, name: "Piano 7", url: "/sounds/piano7.wav" },
+      { id: 15, name: "Piano 8", url: "/sounds/piano8.wav" },
+      { id: 16, name: "Piano 9", url: "/sounds/piano9.wav" },
+      { id: 17, name: "Piano 10", url: "/sounds/piano10.wav" }
     ]
   };
 
