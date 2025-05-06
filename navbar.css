@@ -1,0 +1,79 @@
+/* navbar.css */
+.navbar {
+    background-color: #333;
+    padding: 10px 0;
+    width: 100%;
+}
+
+.navbar ul {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    display: inline-block;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+    background-color: #555;
+    border-radius: 3px;
+}
+
+.user-menu {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.username {
+    color: white;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.logout-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Make the navbar responsive */
+@media (max-width: 768px) {
+    .navbar ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .navbar li {
+        margin: 5px 0;
+    }
+    
+    .user-menu {
+        margin: 10px 0;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .username {
+        margin-bottom: 5px;
+    }
+}
