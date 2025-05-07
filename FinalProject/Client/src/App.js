@@ -4,16 +4,16 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { UserProvider, UserContext } from './UserContext';
 import Login from './Login';
 import Signup from './Signup';
-import Dashboard from './Dashboard'; // You'll need to create this component
+import Dashboard from './Dashboard';
 import ProjectManagement from './ProjectManagement';
 import Feedback from './Feedback';
-import BrowserStudio from './BrowserStudio'; // Assuming this exists
+import BrowserStudio from './BrowserStudio';
 import Navbar from './Navbar';
+import AdminPage from './AdminPage';
 
-// Layout component that includes Navbar for authenticated users
+// Layout that includes Navbar if user is logged in
 const AuthenticatedLayout = ({ children }) => {
   const { currentUser } = useContext(UserContext);
-  
   return (
     <>
       {currentUser && <Navbar />}
@@ -22,34 +22,34 @@ const AuthenticatedLayout = ({ children }) => {
   );
 };
 
-// Protected route component
+// Protect routes from unauthorized access
 const ProtectedRoute = ({ children }) => {
   const { currentUser, isLoading } = useContext(UserContext);
-  
-  // Show loading state while checking authentication
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  
-  // Redirect to login if user is not authenticated
-  if (!currentUser) {
-    return <Navigate to="/Login" />;
-  }
-  
-  // Render children if user is authenticated
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!currentUser) return <Navigate to="/Login" />;
   return <AuthenticatedLayout>{children}</AuthenticatedLayout>;
 };
 
-function App() {
+// Route that redirects root based on auth state
+const RootRedirect = () => {
+  const { currentUser, isLoading } = useContext(UserContext);
+  if (isLoading) return <div>Loading...</div>;
+  return currentUser ? <Navigate to="/dashboard" /> : <Navigate to="/Login" />;
+};
+
+// ✅ Final App component
+const App = () => {
   return (
     <UserProvider>
       <Router>
         <Routes>
-          {/* Public routes - accessible without authentication */}
+          {/* Public routes */}
           <Route path="/Login" element={<Login />} />
           <Route path="/Signup" element={<Signup />} />
-          
-          {/* Protected routes - require authentication */}
+          <Route path="/admin" element={<AdminPage />} />
+
+          {/* Protected routes */}
           <Route 
             path="/dashboard" 
             element={
@@ -82,33 +82,16 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          
-          {/* Redirect root to dashboard if authenticated, otherwise to login */}
-          <Route 
-            path="/" 
-            element={<RootRedirect />} 
-          />
-          
-          {/* Catch all other routes and redirect */}
-          <Route 
-            path="*" 
-            element={<Navigate to="/" />} 
-          />
+
+          {/* Root redirect */}
+          <Route path="/" element={<RootRedirect />} />
+
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
     </UserProvider>
   );
-}
-
-// Component to redirect from root path based on auth state
-const RootRedirect = () => {
-  const { currentUser, isLoading } = useContext(UserContext);
-  
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  
-  return currentUser ? <Navigate to="/dashboard" /> : <Navigate to="/Login" />;
 };
 
 export default App;

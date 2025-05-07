@@ -103,6 +103,16 @@ app.get('/getUser', async (req, res) => {
     }
 })
 
+app.get('/allFeedbacks', async (req, res) => {
+    try {
+        const feedbacks = await Feedback.find();
+        res.status(200).json(feedbacks);
+    } catch (err) {
+        res.status(500).send('Error retrieving feedbacks');
+    }
+});
+
+
 // API endpoint responsible for looking at existing users
 app.get('/getUsers', async (req, res) => {
     console.log(`SERVER: GET ALL USERS`)

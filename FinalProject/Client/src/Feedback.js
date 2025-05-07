@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import "./styles.css";
 
 const Feedback = () => {
@@ -34,6 +35,12 @@ const Feedback = () => {
     return (
         <div className="container">
             <h2>Browser Studio - Error Reporting</h2>
+
+            {/* Link to Admin Login Page */}
+            <p>
+                <Link to="/admin">Admin Login</Link>
+            </p>
+
             <form onSubmit={handleFeedback}>
                 <label htmlFor="name">Name/Username:</label>
                 <input 
@@ -78,5 +85,4 @@ const Feedback = () => {
 };
 
 export default Feedback;
-
 
